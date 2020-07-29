@@ -14,7 +14,7 @@ Official Java Library for JOKUL API. Visit [https://jokul.doku.com](https://joku
 
 ## Requirements
 
-Java 1.8.
+Java 1.8 or above
 
 ## Installation
 
@@ -25,8 +25,8 @@ Put the following dependency to your `pom.xml`:
 ```java
 <dependency>
     <groupId>com.doku</groupId>
-    <artifactId>sdk</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>java-library</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
