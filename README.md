@@ -1,6 +1,6 @@
-# JOKUL Java Library
+# Jokul Java Library
 
-Official Java Library for JOKUL API. Visit [https://jokul.doku.com](https://jokul.doku.com) for more information about the product and [https://jokul.doku.com/docs](https://jokul.doku.com/docs) for the technical documentation.
+Official Java Library for Jokul API. Visit [https://jokul.doku.com](https://jokul.doku.com) for more information about the product and [https://jokul.doku.com/docs](https://jokul.doku.com/docs) for the technical documentation.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ Put the following dependency to your `pom.xml`:
 
 ### Setup Configuration
 
-Get your Client ID and Shared Key from [JOKUL Back Office](https://jokul.doku.com/bo/login).
+Get your Client ID and Shared Key from [Jokul Back Office](https://jokul.doku.com/bo/login).
 
 Setup your configuration:
 
@@ -153,7 +153,7 @@ PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().ge
 
 ## Example
 
-Please refer to this repo for the example project: [JOKUL Java Example](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example).
+Please refer to this repo for the example project: [Jokul Java Example](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example).
 
 ## Help and Support
 
