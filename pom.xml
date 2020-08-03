@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.doku</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>java-library</artifactId>
     <version>1.0.0</version>
     <name>com.doku.java-library</name>
     <description>Demo project for Spring Boot</description>
