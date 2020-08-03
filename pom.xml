@@ -12,7 +12,7 @@
     <artifactId>java-library</artifactId>
     <version>1.0.0</version>
     <name>com.doku.java-library</name>
-    <description>Demo project for Spring Boot</description>
+    <description>This library used for merchant who want to integrate with DOKU</description>
     <url>https://github.com/dokudevex/doku-java-library</url>
 
     <organization>
