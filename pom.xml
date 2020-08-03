@@ -137,7 +137,6 @@
 
     <build>
         <plugins>
-
             <!-- Relase Plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -162,36 +161,8 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Integrasi Sonar-->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.1</version>
-                <configuration>
-                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
-                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>jacoco-initialize</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>jacoco-site</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
-
     <scm>
         <connection>scm:git:git://github.com/dokudevex/doku-java-library.git</connection>
         <developerConnection>scm:git:git@github.com:dokudevex/doku-java-library.git</developerConnection>
