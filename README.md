@@ -39,28 +39,22 @@ Get your Client ID and Shared Key from [Jokul Back Office](https://jokul.doku.co
 Setup your configuration:
 
 ```java
-import com.doku.sdk.pojo.SetupConfiguration;
-import com.doku.sdk.pojo.ServerLocation;
- 
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .merchantName("YOUR BUSINESS NAME")
         .sharedKey("YOUR_SHARED_KEY")
-        .serverLocation(ServerLocation.SANDBOX.getUrl())
+        .environment(baseUrl)
+        .setupServerLocation()
         .build();
 ```
-
-Sandbox: `ServerLocation.SANDBOX.getUrl()`
-
-Production: `ServerLocation.PROD.getUrl()`
+#### Server Location
+Sandbox: `"sandbox"`
+Production: `"production"`
 
 ### Virtual Account
-
 Prepare your request data:
 
 ```java
-import com.doku.sdk.dto.payment.request.*;
- 
 PaymentCodeRequestDto.builder()
         .client(ClientRequestDto.builder()
                 .id("YOUR_CLIENT_ID")
@@ -90,8 +84,7 @@ PaymentCodeRequestDto.builder()
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.sdk.service;
-import com.doku.sdk.dto.payment.response.*;
+import com.doku.java.library.service;
  
 PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().generateMandiri(setupConfiguration, paymentCodeRequestDto);
 ```
@@ -101,8 +94,7 @@ PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().gen
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.sdk.service;
-import com.doku.sdk.dto.payment.response.*;
+import com.doku.java.library.service.va.;
  
 PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiriSyariah(setupConfiguration, paymentCodeRequestDto);
 ```
@@ -112,11 +104,10 @@ PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().ge
 Putting them all together. Here is the example code from setup your configuration to generate payment code / virtual account number:
 
 ```java
-import com.doku.sdk.dto.payment.request.*;
-import com.doku.sdk.dto.payment.response.*;
-import com.doku.sdk.pojo.SetupConfiguration;
-import com.doku.sdk.pojo.ServerLocation;
-import com.doku.sdk.service;
+
+import com.doku.java.library.dto.va.payment.request.*;
+import com.doku.java.library.dto.va.payment.response.*;
+import com.doku.java.library.pojo.SetupConfiguration;
  
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
@@ -149,6 +140,115 @@ PaymentCodeRequestDto.builder()
         .build();
  
 PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiri(setupConfiguration, paymentCodeRequestDto);
+```
+
+
+### Credit Card
+Prepare your request data:
+
+```
+
+import com.doku.java.library.dto.cc.request.*;
+import com.doku.java.library.dto.cc.response.*;
+import com.doku.java.library.pojo.SetupConfiguration;
+
+
+List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
+        lineItemRequestDtoList.add(LineItemRequestDto.builder()
+                .name("") // Insert Product Name of Merchant
+                .price(0L) // Insert Product Price of Merchant
+                .quantity(0) // Insert Product Quanity of Merchant
+                .build());
+
+
+        com.doku.java.library.pojo.SetupConfiguration setupConfigurationLibrary = com.doku.java.library.pojo.SetupConfiguration
+                        .builder()
+                        .clientId(setupConfigurationEntity.getClientId())
+                        .merchantName(setupConfigurationEntity.getMerchantName())
+                        .sharedKey(setupConfigurationEntity.getSharedKey())
+                        .environment("http://app-sit.doku.com/")
+                        .setupServerLocation()
+                        .build();
+
+
+
+        PaymentTokenRequestDto paymentRequestDto = PaymentTokenRequestDto.builder()
+                .client(ClientRequestDto.builder()
+                        .id("CLIENT-ID")
+                        .build())
+                .customer(CustomerRequestDto.builder()
+                        .id("CUSTOMER-ID")
+                        .name("CUSTOMER-NAME")
+                        .address("CUSTOMER-ADDRESS")
+                        .country("CUSTOMER-COUNTRY")
+                        .email("CUSTOMER-EMAIL")
+                        .phone("CUSTOMER-PHONE")
+                        .build())
+                .order(OrderRequestDto.builder()
+                        .amount(0L) //TOTAL AMOUNT OF ORDER
+                        .invoiceNumber("ORDER-INVOICE-NUMBER")
+                        .callbackUrl("CALLBACK-URL") // Redirect Url for notify merchant payment success or failed
+                        .lineItems(lineItemRequestDtoList)
+                        .createdDate("CREATED-DATE EPOCH TIME FORMAT") // 
+                        .sessionId("SESSION-ID")
+                        .build())
+                .sharedKey("1")
+                .build();
+```
+
+##### Request Payment Token
+
+After preparing your request data, you can now generate the payment token :
+
+```java
+import com.doku.java.library.service.cc;
+PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
+
+```
+
+#### Example Code - Virtual Account
+
+```
+
+import com.doku.java.library.dto.cc.request.*;
+import com.doku.java.library.dto.cc.response.*;
+import com.doku.java.library.pojo.SetupConfiguration;
+
+
+List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
+        lineItemRequestDtoList.add(LineItemRequestDto.builder()
+                .name("Granola Kering")
+                .price(10000L)
+                .quantity(1)
+                .build());
+
+
+        PaymentTokenRequestDto paymentRequestDto = PaymentTokenRequestDto.builder()
+                .client(ClientRequestDto.builder()
+                        .id("1")
+                        .build())
+                .customer(CustomerRequestDto.builder()
+                        .id("508")
+                        .name("Fascal si Ganteng")
+                        .address("Jl Dipatiukur no 10")
+                        .country("ZBW")
+                        .email("goodwill@doku.com")
+                        .phone("082928201982")
+                        .build())
+                .order(OrderRequestDto.builder()
+                        .amount(10000L)
+                        .invoiceNumber("INV-GOOD-123")
+                        .callbackUrl("http://localhost:4200/doku-hosted/SU5WFDferd561dfasfasdfaeEW6220204928094958178/redirect")
+                        .lineItems(lineItemRequestDtoList)
+                        .createdDate("20205028095021022")
+                        .sessionId("SU5WFDferd561dfasfasdfaeEW62")
+                        .build())
+                .sharedKey("1")
+                .build();
+
+
+        PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
+
 ```
 
 ## Example
