@@ -39,6 +39,9 @@ Get your Client ID and Shared Key from [Jokul Back Office](https://jokul.doku.co
 Setup your configuration:
 
 ```java
+
+import com.doku.java.library.pojo.SetupConfiguration;
+
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .merchantName("YOUR BUSINESS NAME")
@@ -55,6 +58,8 @@ Production: `"production"`
 Prepare your request data:
 
 ```java
+import com.doku.java.library.dto.va.payment.request.*;
+
 PaymentCodeRequestDto.builder()
         .client(ClientRequestDto.builder()
                 .id("YOUR_CLIENT_ID")
@@ -84,7 +89,7 @@ PaymentCodeRequestDto.builder()
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.java.library.service;
+import com.doku.java.library.service.va;
  
 PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
@@ -94,7 +99,7 @@ PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().gen
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.java.library.service.va.;
+import com.doku.java.library.service.va;
  
 PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
 ```
