@@ -152,7 +152,6 @@ PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().ge
 Prepare your request data:
 
 ```
-
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
