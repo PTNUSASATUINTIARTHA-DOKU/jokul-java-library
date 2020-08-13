@@ -86,7 +86,7 @@ After preparing your request data, you can now generate the payment code / virtu
 ```java
 import com.doku.java.library.service;
  
-PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().generateMandiri(setupConfiguration, paymentCodeRequestDto);
+PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
 #### Mandiri Syariah VA
@@ -96,7 +96,7 @@ After preparing your request data, you can now generate the payment code / virtu
 ```java
 import com.doku.java.library.service.va.;
  
-PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiriSyariah(setupConfiguration, paymentCodeRequestDto);
+PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
 #### Example Code - Virtual Account
