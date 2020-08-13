@@ -9,7 +9,7 @@ Official Java Library for Jokul API. Visit [https://jokul.doku.com](https://joku
 - [Usage](#usage)
   - [Setup Configuration](#setup-configuration)
   - [Virtual Account](#virtual-account)
-  --[Credit Card](#credit-card)
+  - [Credit Card](#credit-card)
 - [Example](#example)
 - [Help and Support](#help-and-support)
 
