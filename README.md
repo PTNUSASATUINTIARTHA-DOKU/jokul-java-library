@@ -109,7 +109,6 @@ PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().ge
 Putting them all together. Here is the example code from setup your configuration to generate payment code / virtual account number:
 
 ```java
-
 import com.doku.java.library.dto.va.payment.request.*;
 import com.doku.java.library.dto.va.payment.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -151,7 +150,7 @@ PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().ge
 ### Credit Card
 Prepare your request data:
 
-```
+```java
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -172,9 +171,7 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
                         .environment("http://app-sit.doku.com/")
                         .setupServerLocation()
                         .build();
-
-
-
+                        
         PaymentTokenRequestDto paymentRequestDto = PaymentTokenRequestDto.builder()
                 .client(ClientRequestDto.builder()
                         .id("CLIENT-ID")
@@ -209,10 +206,9 @@ PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, pay
 
 ```
 
-#### Example Code - Virtual Account
+#### Example Code - Credit Card
 
-```
-
+```java
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -251,7 +247,6 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
 
 
         PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
-
 ```
 
 ## Example
