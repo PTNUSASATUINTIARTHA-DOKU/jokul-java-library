@@ -46,7 +46,7 @@ SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .merchantName("YOUR BUSINESS NAME")
         .sharedKey("YOUR_SHARED_KEY")
-        .environment(baseUrl)
+        .environment("sandbox")
         .setupServerLocation()
         .build();
 ```
