@@ -157,7 +157,6 @@ import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
 
-
 List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
         lineItemRequestDtoList.add(LineItemRequestDto.builder()
                 .name("") // Insert Product Name of Merchant
