@@ -89,9 +89,10 @@ PaymentCodeRequestDto.builder()
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.java.library.service.va;
+import com.doku.java.library.service.va.*;
+import com.doku.java.library.dto.va.payment.response.*;
  
-PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
+PaymentCodeResponseDto paymentCodeResponseDto =new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
 #### Mandiri Syariah VA
@@ -99,9 +100,10 @@ PaymentCodeResponseDto paymentCodeResponseDto =new GeneratePaycodeServices().gen
 After preparing your request data, you can now generate the payment code / virtual account number:
 
 ```java
-import com.doku.java.library.service.va;
+import com.doku.java.library.service.va.*;
+import com.doku.java.library.dto.va.payment.response.*;
  
-PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
+PaymentCodeResponseDto paymentCodeResponseDto = new VaServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
 #### Example Code - Virtual Account
@@ -143,7 +145,7 @@ PaymentCodeRequestDto.builder()
         .generateWords()
         .build();
  
-PaymentCodeResponseDto paymentCodeResponseDto = new GeneratePaycodeServices().generateMandiri(setupConfiguration, paymentCodeRequestDto);
+PaymentCodeResponseDto paymentCodeResponseDto = new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
 
