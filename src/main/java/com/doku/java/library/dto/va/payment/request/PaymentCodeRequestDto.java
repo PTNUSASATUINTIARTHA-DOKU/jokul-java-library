@@ -78,6 +78,7 @@ public class PaymentCodeRequestDto {
                     + this.virtualAccountInfo.getReusableStatus()
                     + this.sharedKey;
 
+
             this.security = SecurityRequestDto.builder()
                     .checkSum(EncryptBuilder.builder()
                             .sha256(words).build()

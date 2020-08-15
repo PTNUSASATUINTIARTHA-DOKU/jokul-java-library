@@ -11,10 +11,9 @@
     <groupId>com.doku</groupId>
     <artifactId>java-library</artifactId>
     <version>1.0.0</version>
-    <name>com.doku.java-library</name>
+    <name>jokul-java-library</name>
     <description>This library used for merchant who want to integrate with DOKU</description>
     <url>https://github.com/dokudevex/doku-java-library</url>
-
     <organization>
         <name>PT Nusa Satu Inti Artha</name>
         <url>doku.com</url>
@@ -31,10 +30,11 @@
     <properties>
         <java.version>1.8</java.version>
         <sonar.sources>src/main</sonar.sources>
-        <!--JaCoCo sonar properties -->
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <jacoco.outputDir>target/coverage-reports</jacoco.outputDir>
-        <sonar.coverage.jacoco.reportPath>${jacoco.outputDir}/jacoco-unit.exec</sonar.coverage.jacoco.reportPath>
+        <jacoco.version>0.8.3</jacoco.version>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
     </properties>
 
     <dependencies>
@@ -50,6 +50,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.fascalsj</groupId>
+            <artifactId>string-manipulator</artifactId>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,6 +148,36 @@
                         <configuration>
                             <pomFileName>${basedir}/pom.xml</pomFileName>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                    <output>file</output>
+                    <append>true</append>
+                    <excludes>
+                        <exclude>*MethodAccess</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

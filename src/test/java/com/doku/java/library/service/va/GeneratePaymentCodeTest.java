@@ -13,10 +13,12 @@ import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
-
+@SpringBootTest
 class GeneratePaymentCodeTest {
 
     @MockBean
@@ -28,10 +30,16 @@ class GeneratePaymentCodeTest {
     @MockBean
     ClientBuilder clientBuilder;
 
+    @Autowired
+    VaServices vaServices;
+
+
     // Data Configuration
-    private String clientId = "client-id";
-    private String sharedKey = "inirahasia";
-    private String invoiceNumber = "JVM-000-11";
+    private final String clientId = "client-id";
+    private final String sharedKey = "inirahasia";
+    private final String invoiceNumber = "JVM-000-11";
+    private final String errorMessage = "Merchant Not Found";
+    private final Integer errorStatusCode = 404;
 
     String jsonResponse = "";
 
@@ -103,7 +111,7 @@ class GeneratePaymentCodeTest {
     void generatePaycodeMandiri() throws IOException {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(jsonResponse));
-        server.start(9090);
+        server.start(9091);
 
         String baseUrl = server.url("/mandiri/").toString();
 
@@ -124,16 +132,18 @@ class GeneratePaymentCodeTest {
         Assertions.assertEquals(actual.getVirtualAccountInfo().getExpiredDate(), paymentCodeResponseDtoMock.getVirtualAccountInfo().getExpiredDate());
         Assertions.assertEquals(actual.getVirtualAccountInfo().getHowToPayApi(), paymentCodeResponseDtoMock.getVirtualAccountInfo().getHowToPayApi());
         Assertions.assertEquals(actual.getVirtualAccountInfo().getVirtualAccountNumber(), paymentCodeResponseDtoMock.getVirtualAccountInfo().getVirtualAccountNumber());
-        server.close();
+        server.shutdown();
 
     }
+
+
 
     @Test
     void generatePaycodeMandiriSyariah() throws IOException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(jsonResponse));
-        server.start(9090);
+        server.start(9091);
 
         String baseUrl = server.url("/mandiriSyariah/").toString();
 
@@ -142,6 +152,7 @@ class GeneratePaymentCodeTest {
                 .merchantName("fascal")
                 .sharedKey(sharedKey)
                 .environment(baseUrl)
+                .setupServerLocation()
                 .build();
 
         PaymentCodeResponseDto actual = new VaServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
@@ -154,8 +165,97 @@ class GeneratePaymentCodeTest {
         Assertions.assertEquals(actual.getVirtualAccountInfo().getHowToPayApi(), paymentCodeResponseDtoMock.getVirtualAccountInfo().getHowToPayApi());
         Assertions.assertEquals(actual.getVirtualAccountInfo().getVirtualAccountNumber(), paymentCodeResponseDtoMock.getVirtualAccountInfo().getVirtualAccountNumber());
 
-        server.close();
+
+        server.shutdown();
 
     }
+
+
+    @Test
+    void generatePaycodeMandiriFailed() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"client\": {\n" +
+                "        \"id\": \"" +
+                clientId +
+                "\"" +
+                "    },\n" +
+                "    \"order\": {\n" +
+                "        \"invoice_number\": \"" +
+                invoiceNumber+
+                "\"\n" +
+                "    },\n" +
+                "    \"error\": {\n" +
+                "        \"message\": \"" +
+                errorMessage +
+                "\"\n" +
+                "    }\n" +
+                "}").setResponseCode(errorStatusCode));
+        server.start(9091);
+
+        String baseUrl = server.url("/mandiriSyariah/").toString();
+
+        SetupConfiguration setupConfiguration = SetupConfiguration.builder()
+                .clientId(clientId)
+                .merchantName("fascal")
+                .sharedKey(sharedKey)
+                .environment(baseUrl)
+                .setupServerLocation()
+                .build();
+
+        PaymentCodeResponseDto actual = new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
+
+        Assertions.assertEquals(actual.getClient().getId(), paymentCodeResponseDtoMock.getClient().getId());
+        Assertions.assertEquals(actual.getError().getMessage(), errorMessage);
+        Assertions.assertEquals(actual.getOrder().getInvoiceNumber(), invoiceNumber);
+        Assertions.assertEquals(actual.getError().getStatusCode(), errorStatusCode);
+
+        server.shutdown();
+
+    }
+
+    @Test
+    void generatePaycodeMandiriSyariahFailed() throws IOException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"client\": {\n" +
+                "        \"id\": \"" +
+                clientId +
+                "\"" +
+                "    },\n" +
+                "    \"order\": {\n" +
+                "        \"invoice_number\": \"" +
+                invoiceNumber+
+                "\"\n" +
+                "    },\n" +
+                "    \"error\": {\n" +
+                "        \"message\": \"" +
+                errorMessage +
+                "\"\n" +
+                "    }\n" +
+                "}").setResponseCode(errorStatusCode));
+        server.start(9091);
+
+        String baseUrl = server.url("/mandiriSyariah/").toString();
+
+        SetupConfiguration setupConfiguration = SetupConfiguration.builder()
+                .clientId(clientId)
+                .merchantName("fascal")
+                .sharedKey(sharedKey)
+                .environment(baseUrl)
+                .setupServerLocation()
+                .build();
+
+        PaymentCodeResponseDto actual = new VaServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
+
+        Assertions.assertEquals(actual.getClient().getId(), paymentCodeResponseDtoMock.getClient().getId());
+        Assertions.assertEquals(actual.getError().getMessage(), errorMessage);
+        Assertions.assertEquals(actual.getOrder().getInvoiceNumber(), invoiceNumber);
+        Assertions.assertEquals(actual.getError().getStatusCode(), errorStatusCode);
+        server.shutdown();
+
+    }
+
+
 
 }

@@ -8,10 +8,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class PaymentCodeResponseDto {
-    private ClientResponseDto client;
-    private OrderResponseDto order;
-    private VirtualAccountInfoResponseDto virtualAccountInfo;
-    private SecurityResponseDto security;
-    private ErrorResponseDto error;
+public class ErrorResponseDto {
+    Integer statusCode;
+    String message;
 }

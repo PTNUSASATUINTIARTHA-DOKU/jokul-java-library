@@ -116,7 +116,7 @@ class RequestTokenTest {
         Assert.assertEquals(actual.getOrder().getLineItems().get(0).getQuantity(), paymentResponseDto.getOrder().getLineItems().get(0).getQuantity());
         Assert.assertEquals(actual.getOrder().getSessionId(), paymentResponseDto.getOrder().getSessionId());
 
-        server.close();
+        server.shutdown();
 
     }
 }
