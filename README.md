@@ -120,7 +120,8 @@ SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .merchantName("YOUR BUSINESS NAME")
         .sharedKey("YOUR_SHARED_KEY")
-        .serverLocation(ServerLocation.SANDBOX.getUrl())
+        .environment("sandbox")
+        .setupServerLocation()
         .build();
  
 PaymentCodeRequestDto.builder()
