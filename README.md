@@ -51,11 +51,14 @@ SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .setupServerLocation()
         .build();
 ```
-#### Server Location
+
+For the `environment`, you can use these value depends on your needs:
+
 Sandbox: `"sandbox"`
 Production: `"production"`
 
 ### Virtual Account
+
 Prepare your request data:
 
 ```java
@@ -150,8 +153,8 @@ PaymentCodeRequestDto.builder()
 PaymentCodeResponseDto paymentCodeResponseDto = new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
 
-
 ### Credit Card
+
 Prepare your request data:
 
 ```java
@@ -202,7 +205,7 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
 
 ##### Request Payment Token
 
-After preparing your request data, you can now generate the payment token :
+After preparing your request data, you can now generate the payment token:
 
 ```java
 import com.doku.java.library.service.cc;
