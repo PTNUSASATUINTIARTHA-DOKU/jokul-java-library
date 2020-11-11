@@ -23,14 +23,16 @@ Java 1.8 or above
 
 Put the following dependency to your `pom.xml`:
 
-```java
+```
 <dependency>
     <groupId>com.doku</groupId>
     <artifactId>java-library</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
-
+### SpringBoot Configuration
+Add package into your main Apps
+`@SpringBootApplication(scanBasePackages = {"your-project-package","com.doku.java.library"})`
 ## Usage
 
 ### Setup Configuration
@@ -39,34 +41,36 @@ Get your Client ID and Shared Key from [Jokul Back Office](https://jokul.doku.co
 
 Setup your configuration:
 
-```java
+```
 
 import com.doku.java.library.pojo.SetupConfiguration;
 
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
-        .merchantName("YOUR BUSINESS NAME")
-        .sharedKey("YOUR_SHARED_KEY")
+        .key("YOUR_SHARED_KEY")
         .environment("sandbox")
         .setupServerLocation()
         .build();
+
 ```
-
-For the `environment`, you can use these value depends on your needs:
-
+#### Server Location
 Sandbox: `"sandbox"`
 Production: `"production"`
 
 ### Virtual Account
-
 Prepare your request data:
 
-```java
-import com.doku.java.library.dto.va.payment.request.*;
+```
+import com.doku.java.library.dto.va.payment.request.CustomerRequestDto;
+import com.doku.java.library.dto.va.payment.request.OrderRequestDto;
+import com.doku.java.library.dto.va.payment.request.PaymentRequestDto;
+import com.doku.java.library.dto.va.payment.request.VirtualAccountInfoRequestDto;
 
-PaymentCodeRequestDto.builder()
-        .client(ClientRequestDto.builder()
-                .id("YOUR_CLIENT_ID")
+
+ PaymentRequestDto.builder()
+        .customer(CustomerRequestDto.builder()
+                .email(paymentCodeInboundDto.getEmail())
+                .name(paymentCodeInboundDto.getCustomerName())
                 .build())
         .order(OrderRequestDto.builder()
                 .invoiceNumber("YOUR_INVOICE_NUMBER")
@@ -79,57 +83,41 @@ PaymentCodeRequestDto.builder()
                 .info2("FREE TEXT 2")
                 .info3("FREE TEXT 3")
                 .build())
-        .sharedKey(sharedKey)
-        .customer(CustomerRequestDto.builder()
-                .name("YOUR CUSTOMER NAME")
-                .email("YOUR CUSTOMER EMAIL")
-                .build())
-        .generateWords()
+        .setAdditionalInfo("key Object", Object)
         .build();
 ```
 
-#### Mandiri VA
+#### DOKU VA
 
 After preparing your request data, you can now generate the payment code / virtual account number:
 
-```java
-import com.doku.java.library.service.va.*;
-import com.doku.java.library.dto.va.payment.response.*;
- 
-PaymentCodeResponseDto paymentCodeResponseDto =new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
 ```
-
-#### Mandiri Syariah VA
-
-After preparing your request data, you can now generate the payment code / virtual account number:
-
-```java
 import com.doku.java.library.service.va.*;
 import com.doku.java.library.dto.va.payment.response.*;
  
-PaymentCodeResponseDto paymentCodeResponseDto = new VaServices().generateMandiriSyariahVa(setupConfiguration, paymentCodeRequestDto);
+PaymentResponseDto paymentResponseDto =new VaServices().generateDokuVa(setupConfiguration, paymentRequestDto);
 ```
 
 #### Example Code - Virtual Account
 
 Putting them all together. Here is the example code from setup your configuration to generate payment code / virtual account number:
 
-```java
+```
 import com.doku.java.library.dto.va.payment.request.*;
 import com.doku.java.library.dto.va.payment.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
  
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
-        .merchantName("YOUR BUSINESS NAME")
-        .sharedKey("YOUR_SHARED_KEY")
+        .key("YOUR_SHARED_KEY")
         .environment("sandbox")
         .setupServerLocation()
         .build();
  
-PaymentCodeRequestDto.builder()
-        .client(ClientRequestDto.builder()
-                .id("YOUR_CLIENT_ID")
+PaymentRequestDto paymentCodeRequestDto = PaymentRequestDto.builder()
+        .customer(CustomerRequestDto.builder()
+                .email(paymentCodeInboundDto.getEmail())
+                .name(paymentCodeInboundDto.getCustomerName())
                 .build())
         .order(OrderRequestDto.builder()
                 .invoiceNumber("YOUR_INVOICE_NUMBER")
@@ -142,22 +130,33 @@ PaymentCodeRequestDto.builder()
                 .info2("FREE TEXT 2")
                 .info3("FREE TEXT 3")
                 .build())
-        .sharedKey(sharedKey)
-        .customer(CustomerRequestDto.builder()
-                .name("YOUR CUSTOMER NAME")
-                .email("YOUR CUSTOMER EMAIL")
-                .build())
-        .generateWords()
+        .setAdditionalInfo("key Object", Object)
         .build();
  
-PaymentCodeResponseDto paymentCodeResponseDto = new VaServices().generateMandiriVa(setupConfiguration, paymentCodeRequestDto);
+PaymentResponseDto paymentResponseDto = new VaServices().generateMandiriVa(setupConfiguration, paymentRequestDto);
 ```
+Notify Payment Virtual Account you can use object in this library "NotifyRequestBody".
+To validate signature you can use class GenerateSignature.createSignatureRequest() to create signature
+```
+....
+SignatureComponentDTO signatureComponentDTO = SignatureComponentDTO.builder()
+                .clientId(clientId)
+                .requestId(requestId)
+                .timestamp(requestTimeStamp)
+                .requestTarget("/demo/java-library/demo/java-library/notify")
+                .secretKey("SK-hCJ42G28TA0MKG9LE2E_1")
+                .messageBody(bodyRequest)
+                .build();
 
+        GenerateSignature generateSignature = new GenerateSignature();
+        String signatureGenerated = generateSignature.createSignatureRequest(signatureComponentDTO);
+
+//Your Logic Here 
+```
 ### Credit Card
-
 Prepare your request data:
 
-```java
+```
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -170,11 +169,10 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
                 .build());
 
 
-        com.doku.java.library.pojo.SetupConfiguration setupConfigurationLibrary = com.doku.java.library.pojo.SetupConfiguration
+      SetupConfiguration setupConfigurationLibrary = SetupConfiguration
                         .builder()
                         .clientId(setupConfigurationEntity.getClientId())
-                        .merchantName(setupConfigurationEntity.getMerchantName())
-                        .sharedKey(setupConfigurationEntity.getSharedKey())
+                        .key(setupConfigurationEntity.getkey())
                         .environment("http://app-sit.doku.com/")
                         .setupServerLocation()
                         .build();
@@ -199,15 +197,15 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
                         .createdDate("CREATED-DATE EPOCH TIME FORMAT") // 
                         .sessionId("SESSION-ID")
                         .build())
-                .sharedKey("1")
+                .key("1")
                 .build();
 ```
 
 ##### Request Payment Token
 
-After preparing your request data, you can now generate the payment token:
+After preparing your request data, you can now generate the payment token :
 
-```java
+```
 import com.doku.java.library.service.cc;
 PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
 
@@ -215,7 +213,7 @@ PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, pay
 
 #### Example Code - Credit Card
 
-```java
+```
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -249,10 +247,8 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
                         .createdDate("EPOCHTIME")
                         .sessionId("SESSIONID")
                         .build())
-                .sharedKey("1")
+                .key("1")
                 .build();
-
-
         PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
 ```
 

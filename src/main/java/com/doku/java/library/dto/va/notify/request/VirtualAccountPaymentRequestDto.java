@@ -12,6 +12,4 @@ import lombok.Setter;
 public class VirtualAccountPaymentRequestDto {
     private String date;
     private String systraceNumber;
-    private String referenceNumber;
-    private String channelCode;
 }

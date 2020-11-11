@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Setter
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class OrderResponseDto {
     private String invoiceNumber;
 }

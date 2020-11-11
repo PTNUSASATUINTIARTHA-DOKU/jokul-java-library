@@ -16,15 +16,13 @@ class SetupConfigurationTest {
 
         SetupConfiguration setupConfiguration = SetupConfiguration
                 .builder()
-                .merchantName(merchantName)
                 .clientId(clientId)
-                .sharedKey(sharedKey)
+                .key(sharedKey)
                 .environment(environment)
                 .setupServerLocation()
                 .build();
 
-        Assertions.assertEquals(merchantName, setupConfiguration.getMerchantName());
-        Assertions.assertEquals(sharedKey, setupConfiguration.getSharedKey());
+        Assertions.assertEquals(sharedKey, setupConfiguration.getKey());
         Assertions.assertEquals(clientId, setupConfiguration.getClientId());
         Assertions.assertEquals(setupConfiguration.getEnvironment(), environment);
         Assertions.assertEquals(ServerLocation.SANDBOX.getUrl(), setupConfiguration.getServerLocation());
@@ -35,15 +33,13 @@ class SetupConfigurationTest {
         String environment = "production";
         SetupConfiguration setupConfiguration = SetupConfiguration
                 .builder()
-                .merchantName(merchantName)
                 .clientId(clientId)
-                .sharedKey(sharedKey)
+                .key(sharedKey)
                 .environment(environment)
                 .setupServerLocation()
                 .build();
 
-        Assertions.assertEquals(merchantName, setupConfiguration.getMerchantName());
-        Assertions.assertEquals(sharedKey, setupConfiguration.getSharedKey());
+        Assertions.assertEquals(sharedKey, setupConfiguration.getKey());
         Assertions.assertEquals(clientId, setupConfiguration.getClientId());
         Assertions.assertEquals(setupConfiguration.getEnvironment(), environment);
         Assertions.assertEquals(ServerLocation.PRODUCTION.getUrl(), setupConfiguration.getServerLocation());

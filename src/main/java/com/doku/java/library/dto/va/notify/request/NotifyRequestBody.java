@@ -8,6 +8,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ClientRequestDto {
-    private String id;
+public class NotifyRequestBody {
+    private ServiceDto service;
+    private AcquirerDto acquirer;
+    private ChannelDto channel;
+    private OrderRequestDto order;
+    private VirtualAccountInfoRequestDto virtualAccountInfo;
+    private VirtualAccountPaymentRequestDto virtualAccountPayment;
 }
+

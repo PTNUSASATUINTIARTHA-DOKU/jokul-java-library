@@ -1,4 +1,4 @@
-package com.doku.java.library.dto.va.payment.response;
+package com.doku.java.library.dto.va.notify.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class ErrorResponseDto {
-    Integer statusCode;
-    String message;
+public class ServiceDto {
+    String id;
 }

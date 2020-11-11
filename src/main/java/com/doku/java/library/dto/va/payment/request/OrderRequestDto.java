@@ -10,5 +10,7 @@ import lombok.Getter;
 @Getter
 public class OrderRequestDto {
     private String invoiceNumber;
-    private Long amount;
+    private String amount;
+    private String minAmount;
+    private String maxAmount;
 }

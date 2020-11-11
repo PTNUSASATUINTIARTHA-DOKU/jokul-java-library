@@ -6,14 +6,13 @@ import lombok.Getter;
 @Builder
 @Getter
 public class SetupConfiguration {
-    private String merchantName;
     private String clientId;
-    private String sharedKey;
+    private String key;
     private String environment;
     private String serverLocation;
 
     public static class SetupConfigurationBuilder {
-        public SetupConfiguration.SetupConfigurationBuilder setupServerLocation() {
+        public SetupConfigurationBuilder setupServerLocation() {
             if ("sandbox".equals(this.environment)) {
                 this.serverLocation = ServerLocation.SANDBOX.getUrl();
             } else if ("production".equals(this.environment)) {

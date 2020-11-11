@@ -27,8 +27,7 @@ class RequestTokenTest {
 
         SetupConfiguration setupConfiguration = SetupConfiguration.builder()
                 .clientId("1")
-                .merchantName("fascal")
-                .sharedKey("54345435345")
+                .key("54345435345")
                 .environment("http://localhost:9090")
                 .build();
 
