@@ -4,14 +4,20 @@ Official Java Library for Jokul API. Visit [https://jokul.doku.com](https://joku
 
 ## Table of Contents
 
+- [Payment Channels Supported](#payment-channels-supported)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
   - [Setup Configuration](#setup-configuration)
   - [Virtual Account](#virtual-account)
   - [Credit Card](#credit-card)
-- [Example](#example)
+  - [Handling HTTP Notification](#handling-http-notification)
+- [Sample Project](#sample-project)
 - [Help and Support](#help-and-support)
+
+## Payment Channels Supported
+
+- DOKU VA
 
 ## Requirements
 
@@ -23,44 +29,47 @@ Java 1.8 or above
 
 Put the following dependency to your `pom.xml`:
 
-```
+```xml
 <dependency>
     <groupId>com.doku</groupId>
     <artifactId>java-library</artifactId>
     <version>2.0.0</version>
 </dependency>
 ```
+
 ### SpringBoot Configuration
-Add package into your main Apps
+
+If you use Spring Boot, you migh want to add these package into your main Apps:
+
 `@SpringBootApplication(scanBasePackages = {"your-project-package","com.doku.java.library"})`
+
 ## Usage
 
 ### Setup Configuration
 
-Get your Client ID and Shared Key from [Jokul Back Office](https://jokul.doku.com/bo/login).
+Get your Client ID and Shared Key from Jokul Back Office. [Sandbox Jokul Back Office (for testing purpose)](https://sandbox.doku.com/bo/login) / [Production Jokul Back Office (for real payments)](https://jokul.doku.com/bo/login)
 
 Setup your configuration:
 
-```
-
+```java
 import com.doku.java.library.pojo.SetupConfiguration;
 
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .key("YOUR_SHARED_KEY")
-        .environment("sandbox")
+        .environment("production")
         .setupServerLocation()
         .build();
 
 ```
-#### Server Location
-Sandbox: `"sandbox"`
-Production: `"production"`
+
+If you want to hit to Sandbox, change to `.environment("sandbox")`
 
 ### Virtual Account
-Prepare your request data:
 
-```
+First prepare your payment request data:
+
+```java
 import com.doku.java.library.dto.va.payment.request.CustomerRequestDto;
 import com.doku.java.library.dto.va.payment.request.OrderRequestDto;
 import com.doku.java.library.dto.va.payment.request.PaymentRequestDto;
@@ -87,11 +96,13 @@ import com.doku.java.library.dto.va.payment.request.VirtualAccountInfoRequestDto
         .build();
 ```
 
+For further details of each parameter, please refer to our [Jokul Docs](https://jokul.doku.com/docs/docs/jokul-direct/virtual-account/virtual-account-overview).
+
 #### DOKU VA
 
 After preparing your request data, you can now generate the payment code / virtual account number:
 
-```
+```java
 import com.doku.java.library.service.va.*;
 import com.doku.java.library.dto.va.payment.response.*;
  
@@ -102,7 +113,7 @@ PaymentResponseDto paymentResponseDto =new VaServices().generateDokuVa(setupConf
 
 Putting them all together. Here is the example code from setup your configuration to generate payment code / virtual account number:
 
-```
+```java
 import com.doku.java.library.dto.va.payment.request.*;
 import com.doku.java.library.dto.va.payment.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -110,7 +121,7 @@ import com.doku.java.library.pojo.SetupConfiguration;
 SetupConfiguration setupConfiguration = SetupConfiguration.builder()
         .clientId("YOUR_CLIENT_ID")
         .key("YOUR_SHARED_KEY")
-        .environment("sandbox")
+        .environment("production")
         .setupServerLocation()
         .build();
  
@@ -130,33 +141,17 @@ PaymentRequestDto paymentCodeRequestDto = PaymentRequestDto.builder()
                 .info2("FREE TEXT 2")
                 .info3("FREE TEXT 3")
                 .build())
-        .setAdditionalInfo("key Object", Object)
+        .setAdditionalInfo()
         .build();
  
-PaymentResponseDto paymentResponseDto = new VaServices().generateMandiriVa(setupConfiguration, paymentRequestDto);
+PaymentResponseDto paymentResponseDto = new VaServices().generateDokuVa(setupConfiguration, paymentRequestDto);
 ```
-Notify Payment Virtual Account you can use object in this library "NotifyRequestBody".
-To validate signature you can use class GenerateSignature.createSignatureRequest() to create signature
-```
-....
-SignatureComponentDTO signatureComponentDTO = SignatureComponentDTO.builder()
-                .clientId(clientId)
-                .requestId(requestId)
-                .timestamp(requestTimeStamp)
-                .requestTarget("/demo/java-library/demo/java-library/notify")
-                .secretKey("SK-hCJ42G28TA0MKG9LE2E_1")
-                .messageBody(bodyRequest)
-                .build();
 
-        GenerateSignature generateSignature = new GenerateSignature();
-        String signatureGenerated = generateSignature.createSignatureRequest(signatureComponentDTO);
-
-//Your Logic Here 
-```
 ### Credit Card
+
 Prepare your request data:
 
-```
+```java
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -203,9 +198,9 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
 
 ##### Request Payment Token
 
-After preparing your request data, you can now generate the payment token :
+After preparing your request data, you can now generate the payment token:
 
-```
+```java
 import com.doku.java.library.service.cc;
 PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
 
@@ -213,7 +208,7 @@ PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, pay
 
 #### Example Code - Credit Card
 
-```
+```java
 import com.doku.java.library.dto.cc.request.*;
 import com.doku.java.library.dto.cc.response.*;
 import com.doku.java.library.pojo.SetupConfiguration;
@@ -252,7 +247,72 @@ List<LineItemRequestDto> lineItemRequestDtoList = new ArrayList<>();
         PaymentTokenResponseDto actual = ccService.generateToken(setupConfiguration, paymentRequestDto);
 ```
 
-## Example
+### Handling HTTP Notification
+
+For async payment from these channels:
+
+- Virtual Account
+
+We will send the HTTP Notification after the payment made from your customers. Therefore, you will need to handle the notification to update the transaction status on your end. Here is the steps:
+
+1. Create notification URL (endpoint) on your server to receieve HTTP POST notification from Jokul. The notification will be sent to you whenever the transaction status is updated on Jokul side. The sample code available in [Jokul Java Example](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example).
+1. Setup the notification URL that you made  to the Payment Configuration on Jokul Back Office. [Sandbox Jokul Back Office (for testing purpose)](https://sandbox.doku.com/bo/login) / [Production Jokul Back Office (for real payments)](https://jokul.doku.com/bo/login)
+1. Test the payment with our [Payment Simulator](https://sandbox.doku.com/integration/simulator) (for testing purpose)
+
+```java
+@PostMapping(value = "/notify", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<NotifyResponseBody> getData(@RequestHeader(value = "Client-Id") String clientId,
+                                                     @RequestHeader(value = "Signature") String signature,
+                                                     @RequestHeader(value = "Request-Id") String requestId,
+                                                     @RequestHeader(value = "Request-Timestamp") String requestTimeStamp,
+                                                     @RequestBody String bodyRequest) throws  NoSuchAlgorithmException, InvalidKeyException {
+        
+        NotifyResponseBody notifyResponseBody = null;
+        // Verify the notification authenticity
+        if (notifyRequestHeader.getSignature().equals(generateSignature(notifyRequestHeader,rawBody))) {
+             notifyResponseBody = NotifyResponseBody.builder().order(
+                    OrderResponseDto.builder().
+                            amount(notifyRequestBody.getOrder().getAmount()).
+                            invoiceNumber(notifyRequestBody.getOrder().getInvoiceNumber())
+                            .build())
+                    .virtualAccountInfo(
+                            VirtualAccountInfoResponseDto.builder().
+                                    virtualAccountNumber(notifyRequestBody.getVirtualAccountInfo().getVirtualAccountNumber())
+                                    .build()).build();
+
+            // TODO update your transaction status on your end
+            }
+
+        return new ResponseEntity<>(notifResponse, HttpStatus.OK);
+    }
+```
+
+We encourage you to verify the notification authenticity whether it is coming from DOKU or not. You can use these sample code:
+
+```java
+private String generateSignature(NotifyRequestHeader notifyRequestHeader,String rawBody) throws NoSuchAlgorithmException, InvalidKeyException {
+
+    SignatureComponentDTO signatureComponentDTO = SignatureComponentDTO.builder()
+            .clientId(notifyRequestHeader.getClientId())
+            .requestId(notifyRequestHeader.getRequestId())
+            .timestamp(notifyRequestHeader.getRequestTimeStamp())
+            .requestTarget("/notify")
+            .secretKey("YOUR_SHARED_KEY")
+            .messageBody(rawBody)
+            .build();
+
+    GenerateSignature generateSignature = new GenerateSignature();
+    String signatureGenerated = generateSignature.createSignatureRequest(signatureComponentDTO);
+    log.info("Signature generated from Jokul: "+notifyRequestHeader.getSignature());
+    log.info("Signature generated from your side: "+signatureGenerated);
+
+    return  signatureGenerated;
+}
+```
+
+For further reference, please refer to our [Jokul Docs](https://jokul.doku.com/docs).
+
+## Sample Project
 
 Please refer to this repo for the example project: [Jokul Java Example](https://github.com/PTNUSASATUINTIARTHA-DOKU/jokul-java-example).
 
