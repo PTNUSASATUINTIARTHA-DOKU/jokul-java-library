@@ -30,7 +30,7 @@ public class PaymentRequestDto {
 
         private void setDefaultAdditional(){
             Integration integration = new Integration();
-            integration.setName("java-library");
+            integration.setName("jokul-java-library");
             integration.setVersion("v1.0.3");
             this.additionalInfo.put("integration", integration);
         }

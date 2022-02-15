@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.doku</groupId>
     <artifactId>java-library</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <name>jokul-java-library</name>
     <description>This library used for merchant who want to integrate with DOKU</description>
     <url>https://github.com/dokudevex/doku-java-library</url>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.20</version>
         </dependency>
         <dependency>
             <groupId>com.github.fascalsj</groupId>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>29.0-jre</version>
+            <version>31.0.1-jre</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -187,6 +187,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
     <scm>
