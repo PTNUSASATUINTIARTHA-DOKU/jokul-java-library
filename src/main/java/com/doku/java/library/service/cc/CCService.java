@@ -1,10 +1,10 @@
 package com.doku.java.library.service.cc;
 
 import com.doku.java.library.builder.ClientBuilder;
-import com.doku.java.library.pojo.SetupConfiguration;
 import com.doku.java.library.client.cc.CcClient;
 import com.doku.java.library.dto.cc.request.PaymentTokenRequestDto;
 import com.doku.java.library.dto.cc.response.PaymentTokenResponseDto;
+import com.doku.java.library.pojo.SetupConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

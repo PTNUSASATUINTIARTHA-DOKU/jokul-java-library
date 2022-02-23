@@ -8,13 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @Slf4j
-public class DokuVaClient {
+public class BcaVaClient {
     RequestVaClient requestVaClient = new RequestVaClient();
-    public ResponseEntity<PaymentResponseDto> generateDokuVa(SetupConfiguration setupConfiguration, PaymentRequestDto paymentRequestDto) throws JsonProcessingException {
-        String path = "/doku-virtual-account/v2/payment-code";
+    public ResponseEntity<PaymentResponseDto> generateBcaVa(SetupConfiguration setupConfiguration, PaymentRequestDto paymentRequestDto) throws JsonProcessingException {
+        String path = "/bca-virtual-account/v2/payment-code";
         return requestVaClient.requestVa(setupConfiguration,paymentRequestDto,path);
     }
 }
